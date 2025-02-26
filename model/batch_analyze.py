@@ -151,7 +151,9 @@ class BatchAnalyze:
                 table_start = time.time()
                 for res in table_res_list:
                     # new_image, _ = crop_img(res, pil_img)
-                    new_image, _ = crop_img(res, pil_img, crop_paste_x=50, crop_paste_y=50)
+                    # new_image, _ = crop_img(res, pil_img, crop_paste_x=8, crop_paste_y=8)
+                    new_image, _ = crop_img(res, pil_img, crop_paste_x=1, crop_paste_y=4)
+                    new_image.save(str(table_start) + ".jpg")
                     # new_image.save("saveImage.jpg")
                     single_table_start_time = time.time()
                     html_code = None
