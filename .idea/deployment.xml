@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="项目" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="项目">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/xjl/.conda/envs/MinerU/lib/python3.10/site-packages/magic_pdf" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
