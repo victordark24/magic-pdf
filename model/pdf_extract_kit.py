@@ -193,6 +193,9 @@ class CustomPEKModel:
 
     def __call__(self, image):
 
+        logger.info('----------------------------------------------')
+        logger.info('++++++++++++++++++++++++++++++++++++++++++++++')
+
         pil_img = Image.fromarray(image)
         width, height = pil_img.size
         # logger.info(f'width: {width}, height: {height}')

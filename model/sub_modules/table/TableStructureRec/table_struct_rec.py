@@ -7,6 +7,7 @@ from lineless_table_rec import LinelessTableRecognition
 from lineless_table_rec.utils_table_recover import format_html, plot_rec_box_with_logic_info, plot_rec_box
 from table_cls import TableCls
 from wired_table_rec import WiredTableRecognition
+# from wired_table_rec.utils import ImageOrientationCorrector
 from PIL import Image
 
 class TableStructRec():
@@ -19,9 +20,13 @@ class TableStructRec():
         self.lineless_engine = LinelessTableRecognition()
         self.wired_engine = WiredTableRecognition()
         self.table_cls = TableCls()
+        # img_orientation_corrector = ImageOrientationCorrector()
 
         # image.save("save.jpg")
         image = cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR)
+        # image = img_orientation_corrector(image)
+
+
         cls, elasp = self.table_cls(image)
         if cls == 'wired':
             table_engine = self.wired_engine

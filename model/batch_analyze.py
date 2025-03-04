@@ -15,6 +15,7 @@ from magic_pdf.config.constants import MODEL_NAME
 from magic_pdf.model.pdf_extract_kit import CustomPEKModel
 from magic_pdf.model.sub_modules.model_utils import (
     clean_vram, crop_img, get_res_list_from_layout_res)
+from wired_table_rec.utils import ImageOrientationCorrector
 from magic_pdf.model.sub_modules.ocr.paddleocr.ocr_utils import (
     get_adjusted_mfdetrec_res, get_ocr_result_list)
 # from magic_pdf.operators.models import InferenceResult
@@ -33,9 +34,13 @@ class BatchAnalyze:
         images_layout_res = []
 
         layout_start_time = time.time()
+        img_orientation_corrector = ImageOrientationCorrector()
+
+
         if self.model.layout_model_name == MODEL_NAME.LAYOUTLMv3:
             # layoutlmv3
             for image in images:
+                image = img_orientation_corrector(image)
                 layout_res = self.model.layout_model(image, ignore_catids=[])
                 images_layout_res.append(layout_res)
         elif self.model.layout_model_name == MODEL_NAME.DocLayout_YOLO:
@@ -43,7 +48,12 @@ class BatchAnalyze:
             layout_images = []
             modified_images = []
             for image_index, image in enumerate(images):
+                # 旋转image至正确角度,   image已经是numpy.ndarray
+
+                image = img_orientation_corrector(image)
+
                 pil_img = Image.fromarray(image)
+                # pil_img.save(str(pil_img) + ".jpg")
                 # width, height = pil_img.size
                 # if height > width:
                 #     input_res = {'poly': [0, 0, width, 0, width, height, 0, height]}
@@ -111,7 +121,11 @@ class BatchAnalyze:
         # reference: magic_pdf/model/doc_analyze_by_custom_model.py:doc_analyze
         for index in range(len(images)):
             layout_res = images_layout_res[index]
-            pil_img = Image.fromarray(images[index])
+
+            image = img_orientation_corrector(images[index])
+            pil_img = Image.fromarray(image)
+
+            # pil_img = Image.fromarray(images[index])
 
             ocr_res_list, table_res_list, single_page_mfdetrec_res = (
                 get_res_list_from_layout_res(layout_res)
@@ -151,7 +165,7 @@ class BatchAnalyze:
                 table_start = time.time()
                 for res in table_res_list:
                     # new_image, _ = crop_img(res, pil_img)
-                    # new_image, _ = crop_img(res, pil_img, crop_paste_x=8, crop_paste_y=8)
+                    # 这是填充空白区域裁剪  并非原图裁剪
                     new_image, _ = crop_img(res, pil_img, crop_paste_x=1, crop_paste_y=4)
                     new_image.save(str(table_start) + ".jpg")
                     # new_image.save("saveImage.jpg")
