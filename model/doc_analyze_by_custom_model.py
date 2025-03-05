@@ -205,6 +205,7 @@ def doc_analyze(
                 page_data = dataset.get_page(index)
                 img_dict = page_data.get_image()
                 images.append(img_dict['img'])
+                # type(images[0])   <class 'numpy.ndarray'>
         analyze_result = batch_model(images)
 
         for index in range(len(dataset)):

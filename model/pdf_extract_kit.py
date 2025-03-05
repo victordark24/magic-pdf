@@ -10,7 +10,6 @@ from loguru import logger
 from PIL import Image
 
 
-
 from pathlib import Path
 from lineless_table_rec import LinelessTableRecognition
 from lineless_table_rec.utils_table_recover import format_html, plot_rec_box_with_logic_info, plot_rec_box
