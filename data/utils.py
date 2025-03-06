@@ -4,11 +4,12 @@ import numpy as np
 from loguru import logger
 
 from magic_pdf.utils.annotations import ImportPIL
+from rapid_undistorted.inference import InferenceEngine
 
 
 @ImportPIL
 # def fitz_doc_to_image(doc, dpi=200) -> dict:
-def fitz_doc_to_image(doc, dpi=800) -> dict:
+def fitz_doc_to_image(doc, dpi=400) -> dict:
     """Convert fitz.Document to image, Then convert the image to numpy array.
 
     Args:
@@ -19,6 +20,7 @@ def fitz_doc_to_image(doc, dpi=800) -> dict:
         dict:  {'img': numpy array, 'width': width, 'height': height }
     """
     from PIL import Image
+    # engine = InferenceEngine()
     mat = fitz.Matrix(dpi / 72, dpi / 72)
     pm = doc.get_pixmap(matrix=mat, alpha=False)
 
@@ -27,7 +29,11 @@ def fitz_doc_to_image(doc, dpi=800) -> dict:
         # pm = doc.get_pixmap(matrix=fitz.Matrix(1, 1), alpha=False)
         pm = doc.get_pixmap(matrix=fitz.Matrix(2, 2), alpha=False)
 
+
     img = Image.frombytes('RGB', (pm.width, pm.height), pm.samples)
+    # 添加去阴影
+    # img, elapse = engine(img, ["unwrap", "unshadow", ("unblur", "OpenCvBilateral")])
+
     img = np.array(img)
 
     img_dict = {'img': img, 'width': pm.width, 'height': pm.height}
@@ -35,7 +41,9 @@ def fitz_doc_to_image(doc, dpi=800) -> dict:
     return img_dict
 
 @ImportPIL
-def load_images_from_pdf(pdf_bytes: bytes, dpi=200, start_page_id=0, end_page_id=None) -> list:
+# def load_images_from_pdf(pdf_bytes: bytes, dpi=200, start_page_id=0, end_page_id=None) -> list:
+def load_images_from_pdf(pdf_bytes: bytes, dpi=800, start_page_id=0, end_page_id=None) -> list:
+
     from PIL import Image
     images = []
     with fitz.open('pdf', pdf_bytes) as doc:

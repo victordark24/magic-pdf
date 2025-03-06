@@ -164,9 +164,9 @@ class BatchAnalyze:
             if self.model.apply_table:
                 table_start = time.time()
                 for res in table_res_list:
-                    # new_image, _ = crop_img(res, pil_img)
+                    new_image, _ = crop_img(res, pil_img)
                     # 这是填充空白区域裁剪  并非原图裁剪
-                    new_image, _ = crop_img(res, pil_img, crop_paste_x=1, crop_paste_y=4)
+                    # new_image, _ = crop_img(res, pil_img, crop_paste_x=1, crop_paste_y=4)
                     new_image.save(str(table_start) + ".jpg")
                     # new_image.save("saveImage.jpg")
                     single_table_start_time = time.time()
